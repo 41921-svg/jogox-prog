@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CAMISA11 — Football Career & Highlights Manager</title>
+  <link rel="icon" type="image/jpeg" href="assets/images/camisa11-logo.jpg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- CONTAINER PRINCIPAL -->
+  <div id="app-container">
+
+    <!-- SIDEBAR DE NAVEGAÇÃO DESKTOP -->
+    <aside class="sidebar">
+      <div class="brand" onclick="Game.switchTab('dashboard')">
+        <div id="brand-badge-icon" class="brand-badge-icon">⚽</div>
+        <div class="brand-info">
+          <h1 id="brand-club-name">CAMISA11 FC</h1>
+          <span>Carreira & Highlights</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard" onclick="Game.switchTab('dashboard')">
+          <span class="nav-icon">🏠</span> Início
+        </button>
+        <button class="nav-item" data-tab="squad" onclick="Game.switchTab('squad')">
+          <span class="nav-icon">👥</span> Elenco
+        </button>
+        <button class="nav-item" data-tab="matches" onclick="Game.switchTab('matches')">
+          <span class="nav-icon">⚽</span> Partidas
+        </button>
+        <button class="nav-item" data-tab="market" onclick="Game.switchTab('market')">
+          <span class="nav-icon">🛒</span> Mercado
+        </button>
+        <button class="nav-item" data-tab="standings" onclick="Game.switchTab('standings')">
+          <span class="nav-icon">🏆</span> Campeonato
+        </button>
+        <button class="nav-item" data-tab="ranking" onclick="Game.switchTab('ranking')">
+          <span class="nav-icon">📊</span> Ranking
+        </button>
+        <button class="nav-item" data-tab="career" onclick="Game.switchTab('career')">
+          <span class="nav-icon">💼</span> Carreira
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary btn-sm btn-block" id="btn-sound-toggle" title="Alternar Som">🔊 Som</button>
+        <button class="btn btn-danger-subtle btn-sm btn-block" id="btn-reset-career" style="margin-top: 8px;">Recomeçar</button>
+      </div>
+    </aside>
+
+    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <div class="main-wrapper">
+
+      <!-- CABEÇALHO SUPERIOR (TOP BAR) -->
+      <header class="top-header">
+        <div class="header-left">
+          <div id="top-badge-container"></div>
+          <div>
+            <div class="header-club-name" id="top-club-name">CAMISA11 FC</div>
+            <div class="header-season-tag" id="top-season">📅 Temporada 2026</div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="resource-chip money" title="Orçamento em Caixa">
+            <span class="res-icon">💰</span>
+            <span id="top-budget">R$ 8.000.000</span>
+          </div>
+
+          <div class="resource-chip ovr" title="Força do Elenco">
+            <span id="top-ovr">⭐ 72 OVR</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- CONTEÚDO DAS ABAS -->
+      <main class="content-container">
+
+        <!-- ====================================================================
+             1. 🏠 DASHBOARD (TELA INICIAL)
+             ==================================================================== -->
+        <section id="pane-dashboard" class="tab-pane active">
+          <!-- CARD: PRÓXIMA PARTIDA -->
+          <div class="card dash-match-hero" id="dash-next-match-card">
+            <div class="dash-comp-tag" id="dash-match-round-text">
+              🏆 3ª DIVISÃO · RODADA 1 DE 18
+            </div>
+
+            <div class="match-versus-flex">
+              <div class="team-box home">
+                <div id="dash-home-badge"></div>
+                <div class="team-name" id="dash-home-name">CAMISA11 FC</div>
+                <div class="team-ovr-tag" id="dash-home-ovr">72 OVR</div>
+              </div>
+
+              <div class="vs-badge">VS</div>
+
+              <div class="team-box away">
+                <div id="dash-away-badge"></div>
+                <div class="team-name" id="dash-away-name">UNIÃO FC</div>
+                <div class="team-ovr-tag" id="dash-away-ovr">69 OVR</div>
+              </div>
+            </div>
+
+            <div class="match-actions-flex">
+              <button class="btn btn-primary btn-lg" onclick="Game.openPreMatchModal()">
+                ⚽ JOGAR
+              </button>
+              <button class="btn btn-secondary btn-lg" onclick="Game.simulateMatchInstantly()">
+                ⚡ SIMULAR
+              </button>
+            </div>
+          </div>
+
+          <!-- GRID: ÚLTIMO RESULTADO & CLASSIFICAÇÃO -->
+          <div class="dash-grid-two">
+            <!-- ÚLTIMO RESULTADO -->
+            <div class="card">
+              <div class="card-title">
+                <span>Último Resultado</span>
+                <span class="card-subtitle">Temporada Regular</span>
+              </div>
+              <div id="dash-last-result-box" style="text-align: center; padding: 18px 0;">
+                <span style="color: var(--text-muted); font-size: 0.9rem;">Nenhuma partida disputada ainda.</span>
+              </div>
+            </div>
+
+            <!-- CLASSIFICAÇÃO RÁPIDA -->
+            <div class="card">
+              <div class="card-title">
+                <span>Classificação</span>
+                <button class="btn btn-link btn-xs" onclick="Game.switchTab('standings')">VER TABELA</button>
+              </div>
+              <table class="mini-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Clube</th>
+                    <th>PTS</th>
+                    <th>J</th>
+                    <th>SG</th>
+                  </tr>
+                </thead>
+                <tbody id="dash-mini-table-body">
+                  <!-- Inserido dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             2. 👥 ELENCO & ESCALAÇÃO 2D
+             ==================================================================== -->
+        <section id="pane-squad" class="tab-pane">
+          <div class="squad-controls-bar">
+            <div class="view-toggles">
+              <button class="btn btn-secondary btn-sm active" id="btn-view-pitch" onclick="Game.toggleSquadView('pitch')">
+                🏟️ Campo Tático
+              </button>
+              <button class="btn btn-secondary btn-sm" id="btn-view-list" onclick="Game.toggleSquadView('list')">
+                📋 Lista do Elenco
+              </button>
+            </div>
+
+            <div class="squad-summary-chips">
+              <span class="chip">OVR Médio: <strong id="squad-ovr-val">72 OVR</strong></span>
+              <span class="chip">Formação: <strong id="squad-formation-val">4-3-3</strong></span>
+              <button class="btn btn-primary btn-sm" onclick="Game.autoLineup()">⭐ Auto Escalar</button>
+            </div>
+          </div>
+
+          <!-- MODO CAMPO TÁTICO -->
+          <div id="squad-pitch-view">
+            <!-- Formações Disponíveis -->
+            <div class="formation-pills-bar">
+              <span class="label">Formações:</span>
+              <div class="pills-group">
+                <button class="formation-pill active" data-formation="4-3-3" onclick="Game.setFormation('4-3-3')">4-3-3</button>
+                <button class="formation-pill" data-formation="4-4-2" onclick="Game.setFormation('4-4-2')">4-4-2</button>
+                <button class="formation-pill" data-formation="4-2-3-1" onclick="Game.setFormation('4-2-3-1')">4-2-3-1</button>
+                <button class="formation-pill" data-formation="3-5-2" onclick="Game.setFormation('3-5-2')">3-5-2</button>
+                <button class="formation-pill" data-formation="4-5-1" onclick="Game.setFormation('4-5-1')">4-5-1</button>
+              </div>
+            </div>
+
+            <div class="pitch-and-bench-layout">
+              <!-- CAMPO 2D -->
+              <div class="tactical-pitch-card">
+                <div class="pitch-container" id="tactical-pitch-box">
+                  <div class="pitch-lines">
+                    <div class="pitch-half-line"></div>
+                    <div class="pitch-center-circle"></div>
+                    <div class="pitch-center-spot"></div>
+                    <div class="pitch-penalty-top"></div>
+                    <div class="pitch-penalty-bottom"></div>
+                  </div>
+                  <!-- 11 Slots dos Titulares -->
+                  <div id="pitch-starters-slots"></div>
+                </div>
+              </div>
+
+              <!-- PAINEL DO BANCO DE RESERVAS -->
+              <div class="bench-panel-card">
+                <div class="bench-panel-title">
+                  <span>Banco de Reservas</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Clique no titular para trocar</span>
+                </div>
+                <div class="bench-scroll-list" id="bench-players-list">
+                  <!-- Inserido dinamicamente -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODO LISTA COMPLETA -->
+          <div id="squad-list-view" style="display: none;">
+            <div class="squad-cards-grid" id="squad-full-list-container">
+              <!-- Inserido dinamicamente -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             3. ⚽ PARTIDAS
+             ==================================================================== -->
+        <section id="pane-matches" class="tab-pane">
+          <div class="card dash-match-hero">
+            <div class="dash-comp-tag" id="matches-comp-title">
+              3ª DIVISÃO · RODADA 1 DE 18
+            </div>
+
+            <div class="match-versus-flex">
+              <div class="team-box home">
+                <div id="matches-home-badge"></div>
+                <div class="team-name" id="matches-home-name">CAMISA11 FC</div>
+                <div class="team-ovr-tag" id="matches-home-ovr">72 OVR</div>
+              </div>
+
+              <div class="vs-badge">VS</div>
+
+              <div class="team-box away">
+                <div id="matches-away-badge"></div>
+                <div class="team-name" id="matches-away-name">UNIÃO FC</div>
+                <div class="team-ovr-tag" id="matches-away-ovr">69 OVR</div>
+              </div>
+            </div>
+
+            <div class="match-actions-flex">
+              <button class="btn btn-primary btn-lg" onclick="Game.openPreMatchModal()">
+                ⚽ JOGAR PARTIDA
+              </button>
+              <button class="btn btn-secondary btn-lg" onclick="Game.simulateMatchInstantly()">
+                ⚡ SIMULAR
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             4. 🛒 MERCADO DA BOLA
+             ==================================================================== -->
+        <section id="pane-market" class="tab-pane">
+          <div class="market-header-bar">
+            <div class="market-filter-pills">
+              <button class="market-filter-pill active" data-filter="ALL" onclick="Game.setMarketFilter('ALL')">Todos</button>
+              <button class="market-filter-pill" data-filter="GK" onclick="Game.setMarketFilter('GK')">GK</button>
+              <button class="market-filter-pill" data-filter="DEF" onclick="Game.setMarketFilter('DEF')">DEF</button>
+              <button class="market-filter-pill" data-filter="MEI" onclick="Game.setMarketFilter('MEI')">MEI</button>
+              <button class="market-filter-pill" data-filter="ATA" onclick="Game.setMarketFilter('ATA')">ATA</button>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted);">
+              Novos atletas chegam a cada rodada
+            </div>
+          </div>
+
+          <div class="market-cards-grid" id="market-cards-container">
+            <!-- Cards de atletas no mercado -->
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             5. 🏆 CAMPEONATO (TABELA DE CLASSIFICAÇÃO)
+             ==================================================================== -->
+        <section id="pane-standings" class="tab-pane">
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-header-flex">
+              <span style="font-weight: 800; font-size: 1.05rem;">Tabela de Classificação</span>
+              <span class="badge badge-accent" id="standings-round-badge">Rodada 1 de 18</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="league-full-table">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>Clube</th>
+                    <th>PTS</th>
+                    <th>J</th>
+                    <th>V</th>
+                    <th>E</th>
+                    <th>D</th>
+                    <th>GP</th>
+                    <th>GC</th>
+                    <th>SG</th>
+                  </tr>
+                </thead>
+                <tbody id="league-standings-body">
+                  <!-- Inserido dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-legend-footer">
+              <span><strong style="color: var(--accent);">■ 1º e 2º</strong>: Acesso à 2ª Divisão</span>
+              <span><strong style="color: var(--red);">■ 9º e 10º</strong>: Zona de Rebaixamento</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             6. 📊 RANKING MUNDIAL DE CLUBES
+             ==================================================================== -->
+        <section id="pane-ranking" class="tab-pane">
+          <div class="card" style="padding: 0; overflow: hidden;">
+            <div class="table-header-flex">
+              <span style="font-weight: 800; font-size: 1.05rem;">Ranking de Clubes</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">Baseado em OVR, Títulos e Patrimônio</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="league-full-table">
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Clube</th>
+                    <th>Força</th>
+                    <th>Títulos</th>
+                    <th>Orçamento</th>
+                  </tr>
+                </thead>
+                <tbody id="global-ranking-body">
+                  <!-- Inserido dinamicamente -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================================================================
+             7. 💼 CARREIRA DO TREINADOR
+             ==================================================================== -->
+        <section id="pane-career" class="tab-pane">
+          <div class="dash-grid-two">
+            <!-- PERFIL DO TREINADOR -->
+            <div class="card">
+              <div class="card-title">Perfil do Treinador</div>
+              <div style="font-size: 1.3rem; font-weight: 900; margin-bottom: 4px;" id="career-manager-name">Treinador</div>
+              <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 16px;">Comandando o <span id="career-club-name">CAMISA11 FC</span></div>
+
+              <div style="margin-bottom: 14px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 700; margin-bottom: 6px;">
+                  <span>Reputação no Futebol</span>
+                  <span id="career-rep-val" style="color: var(--accent);">42/100</span>
+                </div>
+                <div class="progress-bar-track">
+                  <div class="progress-bar-fill" id="career-rep-fill" style="width: 42%;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ESTATÍSTICAS DA CARREIRA -->
+            <div class="card">
+              <div class="card-title">Histórico da Carreira</div>
+              <div class="career-stats-grid">
+                <div class="c-stat-box">
+                  <div class="c-stat-num" id="career-matches-count">0</div>
+                  <div class="c-stat-lbl">Partidas</div>
+                </div>
+                <div class="c-stat-box">
+                  <div class="c-stat-num" id="career-wins-count">0</div>
+                  <div class="c-stat-lbl">Vitórias</div>
+                </div>
+                <div class="c-stat-box">
+                  <div class="c-stat-num" id="career-win-pct">0%</div>
+                  <div class="c-stat-lbl">Aproveitamento</div>
+                </div>
+                <div class="c-stat-box">
+                  <div class="c-stat-num" id="career-trophies-count">0</div>
+                  <div class="c-stat-lbl">Títulos</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- NAVEGAÇÃO MOBILE (BOTTOM BAR) -->
+    <nav class="mobile-nav">
+      <button class="mobile-nav-btn active" data-tab="dashboard" onclick="Game.switchTab('dashboard')">
+        <span class="m-icon">🏠</span><span>Início</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="squad" onclick="Game.switchTab('squad')">
+        <span class="m-icon">👥</span><span>Elenco</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="matches" onclick="Game.switchTab('matches')">
+        <span class="m-icon">⚽</span><span>Jogar</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="market" onclick="Game.switchTab('market')">
+        <span class="m-icon">🛒</span><span>Mercado</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="standings" onclick="Game.switchTab('standings')">
+        <span class="m-icon">🏆</span><span>Tabela</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="ranking" onclick="Game.switchTab('ranking')">
+        <span class="m-icon">📊</span><span>Rank</span>
+      </button>
+      <button class="mobile-nav-btn" data-tab="career" onclick="Game.switchTab('career')">
+        <span class="m-icon">💼</span><span>Carreira</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 1: FLUXO DE ONBOARDING / NOVO JOGO
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-onboarding">
+    <div class="modal-box onboard-modal-box">
+
+      <!-- PASSO 1: BOAS-VINDAS -->
+      <div id="onboard-step-welcome" class="onboard-step">
+        <div style="text-align: center; padding: 20px 0;">
+          <h1 style="font-size: 2.8rem; font-weight: 900; letter-spacing: -0.02em; color: var(--accent);">CAMISA11</h1>
+          <p style="font-size: 1.15rem; color: var(--text-secondary); margin-top: 8px; margin-bottom: 30px;">
+            "Crie sua história no futebol."
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px; max-width: 340px; margin: 0 auto;">
+            <button class="btn btn-primary btn-lg" onclick="Game.openOnboarding('choose_club')">
+              ⚽ ESCOLHER UM CLUBE
+            </button>
+            <button class="btn btn-secondary btn-lg" onclick="Game.openOnboarding('create_club')">
+              🛠️ CRIAR MEU CLUBE
+            </button>
+            <button class="btn btn-secondary btn-md" id="onboard-btn-continue" style="display: none;" onclick="Game.onGameReady()">
+              ▶️ CONTINUAR CARREIRA
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO 2A: ESCOLHER UM CLUBE -->
+      <div id="onboard-step-choose" class="onboard-step" style="display: none;">
+        <div class="step-header">
+          <h2>ESCOLHA SEU CLUBE</h2>
+          <p>🇧🇷 Brasil · 3ª Divisão Nacional</p>
+        </div>
+        <div class="choose-clubs-grid" id="choose-clubs-grid">
+          <!-- Inserido dinamicamente -->
+        </div>
+        <div style="margin-top: 18px; text-align: center;">
+          <button class="btn btn-secondary btn-sm" onclick="Game.openOnboarding('welcome')">Voltar</button>
+        </div>
+      </div>
+
+      <!-- PASSO 2B: CRIAR MEU CLUBE -->
+      <div id="onboard-step-create" class="onboard-step" style="display: none;">
+        <div class="step-header">
+          <h2>CRIE SEU CLUBE</h2>
+          <p>Personalize a identidade do seu time</p>
+        </div>
+
+        <div class="create-club-form">
+          <div class="preview-badge-center" id="create-badge-preview"></div>
+
+          <div class="form-group">
+            <label>Nome do Clube</label>
+            <input type="text" id="create-club-name" value="CAMISA11 FC" oninput="Game.updateCreateClubPreview()">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Abreviação</label>
+              <input type="text" id="create-club-short" value="C11" maxlength="4" oninput="Game.updateCreateClubPreview()">
+            </div>
+            <div class="form-group">
+              <label>Cidade</label>
+              <input type="text" id="create-club-city" value="São Paulo" oninput="Game.updateCreateClubPreview()">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Formato do Escudo</label>
+            <div class="shape-selector">
+              <button class="shape-btn" onclick="Game.setCreateBadgeShape('shield')">🛡️ Escudo</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeShape('circle')">🔵 Círculo</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeShape('diamond')">🔷 Losango</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeShape('star')">★ Estrela</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeShape('crest')">⚜️ Clássico</button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Símbolo Central</label>
+            <div class="shape-selector">
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('ball')">⚽ Bola</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('star')">★ Estrela</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('crown')">👑 Coroa</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('lightning')">⚡ Raio</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('eagle')">🦅 Águia</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('lion')">🦁 Leão</button>
+              <button class="shape-btn" onclick="Game.setCreateBadgeSymbol('flame')">🔥 Chama</button>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Cor Principal</label>
+              <input type="color" value="#0f172a" onchange="Game.setCreateColor('primary', this.value)">
+            </div>
+            <div class="form-group">
+              <label>Cor Secundária</label>
+              <input type="color" value="#10b981" onchange="Game.setCreateColor('secondary', this.value)">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-secondary btn-block" onclick="Game.openOnboarding('welcome')">Voltar</button>
+            <button class="btn btn-primary btn-block" onclick="Game.submitCreatedClub()">AVANÇAR</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PASSO 3: ESCOLHA DA DIFICULDADE -->
+      <div id="onboard-step-difficulty" class="onboard-step" style="display: none;">
+        <div class="step-header">
+          <h2>ESCOLHA O DESAFIO</h2>
+          <p>Defina o nível econômico e esportivo da sua jornada</p>
+        </div>
+
+        <div class="diff-cards-grid">
+          <div class="diff-card" onclick="Game.selectDifficulty('easy')">
+            <div class="diff-badge easy">FÁCIL</div>
+            <h3>Clube Forte</h3>
+            <p>Mais dinheiro inicial · Objetivos mais simples · Equipe competitiva</p>
+          </div>
+
+          <div class="diff-card featured" onclick="Game.selectDifficulty('normal')">
+            <div class="diff-badge normal">NORMAL</div>
+            <h3>Clube Equilibrado</h3>
+            <p>Orçamento realista · Economia balanceada · Desafio clássico</p>
+          </div>
+
+          <div class="diff-card" onclick="Game.selectDifficulty('hard')">
+            <div class="diff-badge hard">DIFÍCIL</div>
+            <h3>Clube Modesto</h3>
+            <p>Pouco dinheiro · Elenco fraco · Luta ponto a ponto contra o rebaixamento</p>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px; text-align: center;">
+          <button class="btn btn-secondary btn-sm" onclick="Game.openOnboarding('welcome')">Voltar</button>
+        </div>
+      </div>
+
+      <!-- PASSO 4: INÍCIO DA CARREIRA -->
+      <div id="onboard-step-start" class="onboard-step" style="display: none;">
+        <div class="step-header">
+          <h2>TEMPORADA 2026</h2>
+          <p>Tudo pronto para o pontapé inicial!</p>
+        </div>
+
+        <div class="start-summary-card">
+          <div id="start-summary-badge" style="margin-bottom: 10px;"></div>
+          <h2 id="start-summary-club-name" style="font-size: 1.6rem; font-weight: 900;">CAMISA11 FC</h2>
+
+          <div class="start-specs-list">
+            <div class="spec-row">
+              <span>Divisão:</span>
+              <strong id="start-summary-div">3ª Divisão</strong>
+            </div>
+            <div class="spec-row">
+              <span>Orçamento Inicial:</span>
+              <strong id="start-summary-budget" style="color: var(--accent);">R$ 8.000.000</strong>
+            </div>
+            <div class="spec-row">
+              <span>Força do Elenco:</span>
+              <strong id="start-summary-ovr" style="color: var(--gold);">72 OVR</strong>
+            </div>
+            <div class="spec-row">
+              <span>Objetivo da Diretoria:</span>
+              <strong id="start-summary-objective" style="color: var(--blue);">"Terminar entre os 10 primeiros"</strong>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-lg" style="margin-top: 24px;" onclick="Game.launchCareer()">
+            COMEÇAR TEMPORADA
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 2: PRÉ-JOGO (TACTICAL SETUP & LAUNCHER)
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-prematch">
+    <div class="modal-box" style="max-width: 480px;">
+      <div class="step-header" style="margin-bottom: 16px;">
+        <h3>PREPARAÇÃO TÁTICA</h3>
+        <p>Ajuste sua equipe antes de entrar em campo</p>
+      </div>
+
+      <!-- VERSUS -->
+      <div class="match-versus-flex" style="margin-bottom: 20px;">
+        <div class="team-box home">
+          <div id="prematch-home-badge"></div>
+          <div class="team-name" id="prematch-home-name">CAMISA11 FC</div>
+          <div class="team-ovr-tag" id="prematch-home-ovr">72 OVR</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="team-box away">
+          <div id="prematch-away-badge"></div>
+          <div class="team-name" id="prematch-away-name">UNIÃO FC</div>
+          <div class="team-ovr-tag" id="prematch-away-ovr">69 OVR</div>
+        </div>
+      </div>
+
+      <!-- TÁTICAS -->
+      <div class="prematch-tactics-box">
+        <label class="t-lbl">Mentalidade de Jogo:</label>
+        <div class="t-btn-group">
+          <button class="tactic-btn tactic-mentality-btn" data-val="DEFENSIVA" onclick="Game.setTacticMentality('DEFENSIVA')">DEFENSIVA</button>
+          <button class="tactic-btn tactic-mentality-btn active" data-val="EQUILIBRADA" onclick="Game.setTacticMentality('EQUILIBRADA')">EQUILIBRADA</button>
+          <button class="tactic-btn tactic-mentality-btn" data-val="OFENSIVA" onclick="Game.setTacticMentality('OFENSIVA')">OFENSIVA</button>
+        </div>
+
+        <label class="t-lbl" style="margin-top: 14px;">Pressão da Marcação:</label>
+        <div class="t-btn-group">
+          <button class="tactic-btn tactic-pressure-btn" data-val="BAIXA" onclick="Game.setTacticPressure('BAIXA')">BAIXA</button>
+          <button class="tactic-btn tactic-pressure-btn active" data-val="NORMAL" onclick="Game.setTacticPressure('NORMAL')">NORMAL</button>
+          <button class="tactic-btn tactic-pressure-btn" data-val="ALTA" onclick="Game.setTacticPressure('ALTA')">ALTA</button>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: 24px;">
+        <button class="btn btn-secondary btn-block" onclick="Game.closeModal('modal-prematch')">Voltar</button>
+        <button class="btn btn-secondary btn-block" onclick="Game.simulateMatchInstantly()">⚡ SIMULAR</button>
+        <button class="btn btn-primary btn-block" onclick="Game.startPlayableMatch()">⚽ JOGAR</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 3: TELA DA PARTIDA JOGÁVEL (CANVAS + HIGHLIGHTS HUD)
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-match-screen">
+    <div class="match-game-viewport">
+
+      <!-- PLACAR NO TOPO -->
+      <div class="match-top-scoreboard">
+        <div class="match-team-chip">
+          <div id="match-home-badge"></div>
+          <span id="match-home-name">C11</span>
+        </div>
+
+        <div class="match-center-score-box">
+          <div class="match-score-digits" id="match-live-score">0 × 0</div>
+          <div class="match-clock-time" id="match-live-clock">00:00</div>
+        </div>
+
+        <div class="match-team-chip">
+          <span id="match-away-name">UNI</span>
+          <div id="match-away-badge"></div>
+        </div>
+      </div>
+
+      <!-- BARRA DE POSSE DE BOLA -->
+      <div class="match-possession-bar-wrap">
+        <div class="match-possession-fill" id="match-possession-bar" style="width: 50%;"></div>
+      </div>
+
+      <!-- TICKER COMENTÁRIO NARRATIVO -->
+      <div class="match-ticker-box" id="match-live-ticker">
+        A partida vai começar no estádio...
+      </div>
+
+      <!-- ALERTA DE MOMENTO-CHAVE -->
+      <div id="match-highlight-alert" class="highlight-alert" style="display: none;">
+        ⚡ MOMENTO-CHAVE!
+      </div>
+
+      <!-- CANVAS 2D DO CAMPO DE JOGO -->
+      <div class="match-canvas-holder">
+        <canvas id="match-canvas-game" width="800" height="600"></canvas>
+      </div>
+
+      <!-- DICAS CONTEXTUAIS RÁPIDAS -->
+      <div class="match-hints-bar">
+        <span>👉 <strong>Toque:</strong> Passe</span> · 
+        <span>🏹 <strong>Arraste:</strong> Chute / Cruzamento</span> · 
+        <span>🛡️ <strong>No Defensor:</strong> Carrinho / Desarme</span>
+      </div>
+
+      <!-- BOTÕES DE CONTROLE DA PARTIDA -->
+      <div class="match-bottom-controls">
+        <button class="btn btn-secondary btn-sm" onclick="MatchSimulator.togglePause()">⏸️ Pausar</button>
+        <button class="btn btn-secondary btn-sm" onclick="MatchSimulator.toggleSpeed()">⚡ 1x / 2x</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 4: RESULTADO PÓS-JOGO
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-match-result">
+    <div class="modal-box" style="text-align: center; max-width: 440px;">
+      <div style="font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;">
+        Fim de Partida
+      </div>
+
+      <div style="font-size: 2.6rem; font-weight: 900; margin-bottom: 6px;" id="post-match-score">
+        2 × 1
+      </div>
+
+      <div style="margin-bottom: 18px;" id="post-match-status-badge">
+        <span class="status-badge win">🟢 VITÓRIA (+3 PTS)</span>
+      </div>
+
+      <!-- TIMELINE DE GOLS -->
+      <div style="background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 18px; max-height: 120px; overflow-y: auto;" id="post-match-timeline">
+        <!-- Inserido dinamicamente -->
+      </div>
+
+      <!-- RECOMPENSAS -->
+      <div class="sim-rewards-flex" style="margin-bottom: 20px;">
+        <span id="post-reward-money" style="color: var(--accent); font-weight: 800;">💰 +R$ 45.000</span>
+        <span id="post-reward-rep" style="color: var(--gold); font-weight: 800;">💼 Reputação: +2</span>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="Game.closePostMatch()">
+        CONTINUAR
+      </button>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 5: DETALHES DO JOGADOR
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-player">
+    <div class="modal-box" style="max-width: 420px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+        <div>
+          <div style="font-size: 1.35rem; font-weight: 900;" id="modal-player-name">Silva</div>
+          <div style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px;" id="modal-player-pos-age">ATA · 24 anos</div>
+        </div>
+        <div style="font-size: 1.8rem; font-weight: 900; color: var(--gold);" id="modal-player-ovr">84</div>
+      </div>
+
+      <!-- ATRIBUTOS DETALHADOS -->
+      <div class="stats-hex-grid" style="margin-bottom: 18px;">
+        <div class="stat-cell"><span>Velocidade</span><strong id="stat-pace">75</strong></div>
+        <div class="stat-cell"><span>Finalização</span><strong id="stat-shoot">78</strong></div>
+        <div class="stat-cell"><span>Passe</span><strong id="stat-pass">72</strong></div>
+        <div class="stat-cell"><span>Drible</span><strong id="stat-dribble">76</strong></div>
+        <div class="stat-cell"><span>Defesa</span><strong id="stat-defend">45</strong></div>
+        <div class="stat-cell"><span>Físico</span><strong id="stat-physical">70</strong></div>
+      </div>
+
+      <div style="background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
+          <span style="color: var(--text-secondary);">Valor de Mercado:</span>
+          <strong style="color: var(--accent);" id="modal-player-value">R$ 8.500.000</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.88rem;">
+          <span style="color: var(--text-secondary);">Situação:</span>
+          <strong id="modal-player-status">Titular</strong>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-danger btn-block" onclick="Game.sellInspectedPlayer()">💸 Vender Atleta</button>
+        <button class="btn btn-secondary btn-block" onclick="Game.closeModal('modal-player')">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL 6: FINAL DE TEMPORADA
+       ========================================================================== -->
+  <div class="modal-overlay hidden" id="modal-season-end">
+    <div class="modal-box" style="max-width: 480px; text-align: center;">
+      <h2 style="font-size: 1.6rem; font-weight: 900; margin-bottom: 6px;" id="season-end-title">TEMPORADA 2026 ENCERRADA!</h2>
+      <p style="color: var(--gold); font-size: 1.1rem; font-weight: 800; margin-bottom: 12px;" id="season-end-status-msg">
+        🏆 ACESSO CONQUISTADO!
+      </p>
+
+      <div style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 14px;" id="season-end-rank-text">
+        Você terminou em 2º Lugar!
+      </div>
+
+      <div style="font-size: 1.1rem; font-weight: 800; color: var(--accent); margin-bottom: 20px;" id="season-end-prize">
+        💰 Premiação: +R$ 7.000.000
+      </div>
+
+      <!-- NOVOS TALENTOS DA BASE -->
+      <div style="text-align: left; background: var(--bg-card-subtle); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 12px; margin-bottom: 16px;">
+        <div style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;">
+          🌟 Novos Talentos da Base Integrados:
+        </div>
+        <div id="season-end-youth-list" style="font-size: 0.88rem;"></div>
+      </div>
+
+      <!-- PROPOSTAS DE OUTROS CLUBES -->
+      <div style="text-align: left; margin-bottom: 20px;">
+        <div style="font-size: 0.82rem; font-weight: 800; text-transform: uppercase; color: var(--blue); margin-bottom: 6px;">
+          💼 Propostas de Outros Clubes:
+        </div>
+        <div id="season-end-offers-list"></div>
+      </div>
+
+      <button class="btn btn-primary btn-block btn-lg" onclick="Game.advanceToNextSeason()">
+        INICIAR TEMPORADA SEGUINTE
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTAINER DE TOASTS -->
+  <div id="toast-container"></div>
+
+  <!-- SCRIPTS MODULARES CAMISA11 -->
+  <script src="js/data.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/club.js"></script>
+  <script src="js/tactics.js"></script>
+  <script src="js/market.js"></script>
+  <script src="js/season.js"></script>
+  <script src="js/match_canvas.js"></script>
+  <script src="js/match_sim.js"></script>
+  <script src="js/career.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
